@@ -1,7 +1,7 @@
 package gestiontusanatorio.back.AccesoDb;
 
 import gestiontusanatorio.back.ConnectionDB;
-import gestiontusanatorio.LoginLice.back.Models.Usuarios;
+import gestiontusanatorio.back.Models.Usuarios;
 
 import java.sql.*;
 
