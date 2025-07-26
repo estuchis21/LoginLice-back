@@ -6,7 +6,7 @@ import gestiontusanatorio.LoginLice.back.Models.Usuarios;
 import java.sql.*;
 
 public class UsuarioRepository {
-
+   
     public boolean existeUsuarioPorUsername(int dni, String username, String email) {
         String sql = "{call EXISTENTE(?, ?, ?)}"; // Stored Procedure que verifica existencia
         try (Connection conn = ConnectionDB.getConnection();
@@ -53,19 +53,6 @@ public class UsuarioRepository {
             return false;
         }
 
-
-        // Debug info
-        System.out.println("Registrando usuario con datos:");
-        System.out.println("DNI: " + user.getDni());
-        System.out.println("Nombres: " + user.getNombres());
-        System.out.println("Apellido: " + user.getApellido());
-        System.out.println("Email: " + user.getEmail());
-        System.out.println("Username: " + user.getUsername());
-        System.out.println("Teléfono: " + user.getTelefono());
-        System.out.println("Contraseña: " + user.getContrasena());
-        System.out.println("IdRol: " + user.getIdRol());
-        System.out.println("IdEspecialidad: " + user.getIdEspecialidad());
-
         // Ejecutar el stored procedure
         try (Connection conn = ConnectionDB.getConnection();
              CallableStatement stmt = conn.prepareCall("{call insertarUsuario(?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
@@ -96,4 +83,41 @@ public class UsuarioRepository {
             return false;
         }
     }
+    
+    public boolean loguearse(String username, String contrasena) {
+        String sql = "{call getUserByUsername(?)}";
+
+        if (username.isBlank() || contrasena.isBlank()) {
+            System.out.println("No pueden haber datos vacíos.");
+            return false;
+        }
+
+        try (Connection conn = ConnectionDB.getConnection();
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setString(1, username);
+            try (ResultSet rs = cs.executeQuery()) {
+
+                if (!rs.next()) {
+                    System.out.println("No existe un usuario con ese nombre.");
+                    return false;
+                }
+
+                String storedPassword = rs.getString("contrasena");
+
+                if (storedPassword.equals(contrasena)) {
+                    System.out.println("Login exitoso.");
+                    return true;
+                } else {
+                    System.out.println("Contraseña incorrecta.");
+                    return false;
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al loguear: " + e.getMessage());
+            return false;
+        }
+    }
+
 }
