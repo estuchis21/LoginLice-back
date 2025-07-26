@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package gestiontusanatorio.back.Services;
-import gestiontusanatorio.LoginLice.back.Models.Usuarios;
+import gestiontusanatorio.back.Models.Usuarios;
 import gestiontusanatorio.back.AccesoDb.UsuarioRepository;
 
 /**
