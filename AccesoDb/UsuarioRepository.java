@@ -6,7 +6,7 @@ import gestiontusanatorio.back.Models.Usuarios;
 import java.sql.*;
 
 public class UsuarioRepository {
-   
+
     public boolean existeUsuarioPorUsername(int dni, String username, String email) {
         String sql = "{call EXISTENTE(?, ?, ?)}"; // Stored Procedure que verifica existencia
         try (Connection conn = ConnectionDB.getConnection();
@@ -83,13 +83,13 @@ public class UsuarioRepository {
             return false;
         }
     }
-    
-    public boolean loguearse(String username, String contrasena) {
+
+    public Usuarios loguearse(String username, String contrasena) {
         String sql = "{call getUserByUsername(?)}";
 
-        if (username.isBlank() || contrasena.isBlank()) {
+        if (username == null || username.isBlank() || contrasena == null || contrasena.isBlank()) {
             System.out.println("No pueden haber datos vacíos.");
-            return false;
+            return null;
         }
 
         try (Connection conn = ConnectionDB.getConnection();
@@ -100,24 +100,37 @@ public class UsuarioRepository {
 
                 if (!rs.next()) {
                     System.out.println("No existe un usuario con ese nombre.");
-                    return false;
+                    return null;
                 }
 
                 String storedPassword = rs.getString("contrasena");
 
-                if (storedPassword.equals(contrasena)) {
-                    System.out.println("Login exitoso.");
-                    return true;
-                } else {
+                if (!storedPassword.equals(contrasena)) {
                     System.out.println("Contraseña incorrecta.");
-                    return false;
+                    return null;
                 }
+
+                Usuarios usuario = new Usuarios();
+
+                usuario.setDni(rs.getInt("DNI"));
+                usuario.setNombres(rs.getString("nombres"));
+                usuario.setApellido(rs.getString("apellido"));
+                usuario.setEmail(rs.getString("email"));
+                usuario.setUsername(rs.getString("username"));
+                usuario.setContrasena(storedPassword);
+                usuario.setTelefono(rs.getString("telefono"));
+                usuario.setIdRol(rs.getInt("id_rol"));
+
+                return usuario;
             }
 
         } catch (Exception e) {
             System.out.println("Error al loguear: " + e.getMessage());
-            return false;
+            e.printStackTrace();
+            return null;
         }
     }
+
+
 
 }
