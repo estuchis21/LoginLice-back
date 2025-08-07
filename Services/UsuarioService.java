@@ -1,5 +1,6 @@
 package gestiontusanatorio.back.Services;
 
+import gestiontusanatorio.back.AccesoDb.PacienteRepo;
 import gestiontusanatorio.back.Models.Usuarios;
 import gestiontusanatorio.back.AccesoDb.UsuarioRepository;
 
@@ -10,6 +11,7 @@ import gestiontusanatorio.back.AccesoDb.UsuarioRepository;
 public class UsuarioService {
 
     private UsuarioRepository userRepo = new UsuarioRepository();
+    private PacienteRepo pacienteRepo = new PacienteRepo();
 
     public boolean registro(Usuarios users) {
         try {
@@ -27,5 +29,9 @@ public class UsuarioService {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+    
+    public int obtenerIdObraSocialPaciente(int idPaciente) {
+        return pacienteRepo.obtenerIdObraSocialPaciente(idPaciente);
     }
 }

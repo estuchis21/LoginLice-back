@@ -84,6 +84,41 @@ public class UsuarioRepository {
         }
     }
 
+    public Integer obtenerIdPacientePorDni(int dni) {
+    String sql = "SELECT id_paciente FROM Pacientes WHERE dni_usuario = ?"; // Ajusta nombres tablas y columnas
+    try (Connection conn = ConnectionDB.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, dni);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("id_paciente");
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al obtener id paciente: " + e.getMessage());
+    }
+    return null;
+}
+
+    public Integer obtenerIdMedicoPorDni(int dni) {
+        String sql = "SELECT id_medico FROM Medicos WHERE dni_usuario = ?"; // Ajusta nombres tablas y columnas
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, dni);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id_medico");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener id medico: " + e.getMessage());
+        }
+        return null;
+    }
+    
+
+
+    
     public Usuarios loguearse(String username, String contrasena) {
         String sql = "{call getUserByUsername(?)}";
 
@@ -121,6 +156,15 @@ public class UsuarioRepository {
                 usuario.setTelefono(rs.getString("telefono"));
                 usuario.setIdRol(rs.getInt("id_rol"));
 
+                // Setear idPaciente (puede ser null si no es paciente)
+                int idPaciente = rs.getInt("id_paciente");
+                if (!rs.wasNull()) {
+                    usuario.setIdPaciente(idPaciente);
+                }
+
+                // Si necesitas idMedico, deberías hacer LEFT JOIN similar para la tabla Medicos en SP
+                // O agregar consulta aparte
+
                 return usuario;
             }
 
@@ -130,7 +174,6 @@ public class UsuarioRepository {
             return null;
         }
     }
-
 
 
 }

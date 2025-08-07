@@ -18,11 +18,13 @@ public class Usuarios {
     private String telefono;
     private int idRol;
     private Integer idEspecialidad = null;
-
+    
+    private Integer idPaciente = null;
+    private Integer idMedico = null;
 
     public Usuarios() {}
 
-    public Usuarios(int dni, String nombres, String apellido, String email, String username, String contrasena, String telefono, int idRol, int idEspecialidad) {
+    public Usuarios(int dni, String nombres, String apellido, String email, String username, String contrasena, String telefono, int idRol, Integer idEspecialidad) {
         this.dni = dni;
         this.nombres = nombres;
         this.apellido = apellido;
@@ -103,10 +105,23 @@ public class Usuarios {
         return idEspecialidad;
     }
 
-
     public void setIdEspecialidad(Integer idEspecialidad) {
         this.idEspecialidad = idEspecialidad;
     }
     
-    
+    public Integer getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(Integer idPaciente) {
+        this.idPaciente = idPaciente;
+    }
+
+    public Integer getIdMedico() {
+        return idMedico;
+    }
+
+    public void setIdMedico(Integer idMedico) {
+        this.idMedico = idMedico;
+    }
 }
